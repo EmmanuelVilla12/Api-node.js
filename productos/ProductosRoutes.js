@@ -11,7 +11,7 @@ const productos = [
 // GET - Obtener todos los productos
 router.get('/productos', (req, res) => {
     const { nombre, categoria, descripcion, stock} = req.query;
-    
+
     res.json({ success: true, data: productos });
 });
 
@@ -24,7 +24,7 @@ router.get('/productos/:id', (req, res) => {
         res.json({ success: true, data: product });
     }
 
-});
+}); 
 
 // ============================
 // POST - Crear producto
