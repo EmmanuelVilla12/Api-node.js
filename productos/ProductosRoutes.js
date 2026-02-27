@@ -10,13 +10,39 @@ const productos = [
 
 // GET - Obtener todos los productos
 router.get('/productos', (req, res) => {
-    const { nombre, categoria, descripcion, stock} = req.query;
+  const { nombre, precio, categoria, descripcion, stock } = req.query;
 
-    res.json({ success: true, data: productos });
+  const filtered = productos.filter(p => {
+    return (
+      (nombre == null || p.nombre?.toLowerCase().includes(nombre.toLowerCase())) &&
+      (precio == null || p.precio === parseFloat(precio)) &&
+      (descripcion == null || p.descripcion?.toLowerCase().includes(descripcion.toLowerCase())) &&
+      (stock == null || p.stock === parseInt(stock)) &&
+      (categoria == null || p.categoria?.toLowerCase().includes(categoria.toLowerCase()))
+    );
+  });
+
+  res.json({ success: true, data: filtered });
 });
 
 // GET - Obtener un producto por ID
 router.get('/productos/:id', (req, res) => {
+  const apiKey = req.headers['password'];
+
+if (!apiKey) {
+  return res.status(401).json({
+    success: false,
+    message: 'Error: API Key no proporcionada'
+  });
+}
+
+if (apiKey !== '123456') {
+  return res.status(403).json({
+    success: false,
+    message: 'Error: la password no es correcta'
+  });
+}
+
     const product  = productos.find(u => u.id === parseInt(req.params.id));
     if (!product) {
         return res.status(404).json({ success: false, message: 'Producto  no encontrado' });
@@ -39,6 +65,25 @@ router.post('/productos', (req, res) => {
     });
   }
 
+const apiKey = req.headers['password'];
+
+if (!apiKey) {
+  return res.status(401).json({
+    success: false,
+    message: 'Error: API Key no proporcionada'
+  });
+}
+
+if (apiKey !== '123456') {
+  return res.status(403).json({
+    success: false,
+    message: 'Error: la password no es correcta'
+  });
+}
+
+
+
+
   const nuevoProducto = {
     id: productos.length > 0 ? productos[productos.length - 1].id + 1 : 1,
     nombre,
@@ -55,6 +100,7 @@ router.post('/productos', (req, res) => {
     data: nuevoProducto
   });
 });
+
 
 
 // ============================
@@ -91,6 +137,22 @@ router.put('/productos/:id', (req, res) => {
 // DELETE - Eliminar producto por ID
 // ============================
 router.delete('/productos/:id', (req, res) => {
+  const apiKey = req.headers['password'];
+
+if (!apiKey) {
+  return res.status(401).json({
+    success: false,
+    message: 'Error: API Key no proporcionada'
+  });
+}
+
+if (apiKey !== '123456') {
+  return res.status(403).json({
+    success: false,
+    message: 'Error: la password no es correcta'
+  });
+}
+
   const id = parseInt(req.params.id);
 
   const index = productos.findIndex(p => p.id === id);
